@@ -4,7 +4,7 @@ import { SafeAreaView, View, StyleSheet } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { Provider as ReduxProvider } from 'react-redux';
 import store, { persistor } from '../src/redux/store';
-import { SplashScreen, useRootNavigationState, useRouter } from 'expo-router';
+import { SplashScreen, Stack, useRootNavigationState, useRouter } from 'expo-router';
 import { Slot } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -35,7 +35,7 @@ const Layout = () => {
       await SplashScreen.hideAsync();
     }
     init();
-    if (!rootNavigationState?.key) return;
+    if (isAuthenticated === null) return;
     if (isAuthenticated) {
       router.replace('/home');
     } else {
@@ -48,10 +48,20 @@ const Layout = () => {
       <PaperProvider>
         <ReduxProvider store={store}>
         <PersistGate persistor={persistor} loading={null}>
-          <StatusBar backgroundColor='#6200EE' />
-          <View style={styles.content}>
+          <StatusBar translucent={true} />
+          {/* <View style={styles.content}>
             <Slot />
-          </View>
+          </View> */}
+            <Stack
+              screenOptions={{
+                headerShown:false
+              }}>
+              <Stack.Screen name="home" />
+              <Stack.Screen name="login" />
+              <Stack.Screen name="signup" />
+              <Stack.Screen name="add-task" />
+              <Stack.Screen name="task" />
+            </Stack>
           </PersistGate>
         </ReduxProvider>
       </PaperProvider>
